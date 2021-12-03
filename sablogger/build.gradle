@@ -42,3 +42,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+
+afterEvaluate { project ->
+    tasks.all { Task task ->
+        if (task.name.startsWith("publish")) {
+            task.dependsOn tasks.getByName('assemble')
+        }
+    }
+}
+
+apply from: "${getRootDir().absolutePath}/sablogger/publish.gradle"

@@ -1,0 +1,63 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def GROUP_ID = 'com.thothsun'
+def ARTIFACT_ID = 'sablogger'
+def VERSION_NAME = '1.0.2'
+def DESCRIPTION = 'A small and beautiful log library for Android that is called SabLogger.'
+def GIT_LOCATION = 'github.com/thothsun/sab-logger'
+def GIT_LOCATION_URL = 'https://' + GIT_LOCATION
+
+publishing {
+    publications {
+        mypublish(MavenPublication) {
+            groupId GROUP_ID
+            artifactId ARTIFACT_ID
+            version VERSION_NAME
+
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+
+            pom {
+                packaging 'aar'
+                name = ARTIFACT_ID
+                description = DESCRIPTION
+                url = GIT_LOCATION_URL
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'thothsun'
+                        name = 'thothsun'
+                        email = 'thothsun@qq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:' + GIT_LOCATION + '.git'
+                    developerConnection = 'scm:git:ssh://' + GIT_LOCATION + '.git'
+                    url = GIT_LOCATION_URL
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name "main"
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+
+}
+
+signing {
+    sign publishing.publications.mypublish
+}
+
